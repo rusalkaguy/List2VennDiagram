@@ -1,9 +1,7 @@
 #
-# Take lists, compute intesections and build VennDiagrams
+# Take a list of sets, compute intesections and build VennDiagrams
 #
-require(VennDiagram)  # install.packages("VennDiagram")
 
-#
 #' Venn Diagram from a list of sets
 #'
 #' Given a list of 2 to 5 sets, draw the Venn Diagram depecting their overlap.
@@ -18,14 +16,14 @@ require(VennDiagram)  # install.packages("VennDiagram")
 #' y=vennSets(list(A=c(1:5),B=c(3:10),C=c(8:20,1)),c("A"="red", "B"="blue", "C"="green"))
 vennSets = function(sets, sets_col, ...) {
   count = length(sets)
-  if(count==2) { vennPair(sets,sets_col, ...)}
-  else if(count==3) { vennTriple(sets,sets_col, ...)}
-  else if(count==4) { vennQuadSets(sets,sets_col, ...)}
-  else if(count==5) { vennQintuple(sets,sets_col, ...)}
+  if(count==2) { vennSetPair(sets,sets_col, ...)}
+  else if(count==3) { vennSetTriple(sets,sets_col, ...)}
+  else if(count==4) { vennSetQuad(sets,sets_col, ...)}
+  else if(count==5) { vennSetQintuple(sets,sets_col, ...)}
   else { stop("list of sets must contain 2-5 sets; yours contained ", count, " set(S)")}
 }
 
-#
+
 #' 2 Set Venn
 #'
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
@@ -36,9 +34,9 @@ vennSets = function(sets, sets_col, ...) {
 #' @param ... passed through to VennDiagram::draw.pairwise.venn
 #'
 #' @examples
-#' x=vennPair(list(A=c(1:5),B=c(3:10)),c("A"="red", "B"="blue"))
-vennPair = function(sets, sets_col, ...) {
-  draw.pairwise.venn(
+#' x=vennSetPair(list(A=c(1:5),B=c(3:10)),c("A"="red", "B"="blue"))
+vennSetPair = function(sets, sets_col, ...) {
+  VennDiagram::draw.pairwise.venn(
     area1=length(sets[[1]])
     , area2=length(sets[[2]])
     , cross.area	= length(intersect(sets[[1]],sets[[2]])) # n12
@@ -61,11 +59,11 @@ vennPair = function(sets, sets_col, ...) {
 #' @param ... passed through to VennDiagram::draw.triple.venn
 #'
 #' @examples
-#' x=vennTriple(list(A=c(1:5),B=c(3:10),C=c(8:20,1)),c("A"="red", "B"="blue", "C"="green"))
+#' x=vennSetTriple(list(A=c(1:5),B=c(3:10),C=c(8:20,1)),c("A"="red", "B"="blue", "C"="green"))
 #
-vennTriple = function(sets, sets_col,...) {
+vennSetTriple = function(sets, sets_col,...) {
   overrideTriple=TRUE;
-  draw.triple.venn(
+  VennDiagram::draw.triple.venn(
     #print(c(
     area1=length(sets[[1]])
     , area2=length(sets[[2]])
@@ -95,10 +93,10 @@ vennTriple = function(sets, sets_col,...) {
 #'
 #' @examples
 #'
-#' x=vennQuadSets(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100)),c("A"="red", "B"="blue", "C"="green", "D"="purple"))
+#' x=vennSetQuad(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100)),c("A"="red", "B"="blue", "C"="green", "D"="purple"))
 #
-vennQuadSets = function(sets, sets_col, ...) {
-  draw.quad.venn(
+vennSetQuad = function(sets, sets_col, ...) {
+  VennDiagram::draw.quad.venn(
     #print(c(
     area1=length(sets[[1]])
     , area2=length(sets[[2]])
@@ -139,10 +137,10 @@ vennQuadSets = function(sets, sets_col, ...) {
 #'
 #' @examples
 #'
-#' x=vennQintuple(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100),E=(50:100)),c("A"="red", "B"="blue", "C"="green", "D"="purple", "E"="beige"))
+#' x=vennSetQintuple(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100),E=(50:100)),c("A"="red", "B"="blue", "C"="green", "D"="purple", "E"="beige"))
 #
-vennQintuple = function(sets, sets_col, ...) {
-  draw.quintuple.venn(
+vennSetQintuple = function(sets, sets_col, ...) {
+  VennDiagram::draw.quintuple.venn(
     #print(c(
     area1=length(sets[[1]])
     , area2=length(sets[[2]])
@@ -186,3 +184,13 @@ vennQintuple = function(sets, sets_col, ...) {
 
   )
 }
+
+#-------------------
+# debug/dev bits
+#-------------------
+#require(VennDiagram)  # install.packages("VennDiagram")
+# usethis::use_package("VennDiagram")
+# devtools::document() # update docs, NAMESPACE
+# devtools::build()  # packages into a tar.gz file
+#
+
