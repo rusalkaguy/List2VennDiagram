@@ -8,6 +8,7 @@ require(VennDiagram)  # install.packages("VennDiagram")
 #'
 #' Given a list of 2 to 5 sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed trhough.
+#' @export
 #' @param sets List of sets (2-5)
 #' @param sets_col vector mapping set names to colors
 #' @param ... passed through to VennDiagram::draw.*.venn
@@ -29,6 +30,7 @@ vennSets = function(sets, sets_col, ...) {
 #'
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed trhough.
+#' @export
 #' @param sets List of sets
 #' @param sets_col vector mapping set names to colors
 #' @param ... passed through to VennDiagram::draw.pairwise.venn
@@ -53,6 +55,7 @@ vennPair = function(sets, sets_col, ...) {
 #'
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed trhough.
+#' @export
 #' @param sets List of sets
 #' @param sets_col vector mapping set names to colors
 #' @param ... passed through to VennDiagram::draw.triple.venn
@@ -85,6 +88,7 @@ vennTriple = function(sets, sets_col,...) {
 #'
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed through.
+#' @export
 #' @param sets List of sets
 #' @param sets_col vector mapping set names to colors
 #' @param ... passed through to VennDiagram::draw.quad.venn
@@ -128,6 +132,7 @@ vennQuadSets = function(sets, sets_col, ...) {
 #'
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed through.
+#' @export
 #' @param sets List of sets
 #' @param sets_col vector mapping set names to colors
 #' @param ... passed through to VennDiagram::draw.quintuple.venn
