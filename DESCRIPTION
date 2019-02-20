@@ -1,5 +1,5 @@
 Package: List2VennDiagram
-ImportS: VennDiagram
+Imports: VennDiagram
 Title: Create VennDiagrams from Lists of Sets
 Version: 0.0.0.9000
 Authors@R: 
