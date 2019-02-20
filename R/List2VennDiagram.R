@@ -1,15 +1,38 @@
 #
 # Take lists, compute intesections and build VennDiagrams
 #
-library(VennDiagram)  # install.packages("VennDiagram")
+require(VennDiagram)  # install.packages("VennDiagram")
+
+#
+#' Venn Diagram from a list of sets
+#'
+#' Given a list of 2 to 5 sets, draw the Venn Diagram depecting their overlap.
+#' All parameters for VennDiagram will be passed trhough.
+#' @param sets List of sets (2-5)
+#' @param sets_col vector mapping set names to colors
+#' @param ... passed through to VennDiagram::draw.*.venn
+#'
+#' @examples
+#' x=vennSets(list(A=c(1:5),B=c(3:10)),c("A"="red", "B"="blue"))
+#' y=vennSets(list(A=c(1:5),B=c(3:10),C=c(8:20,1)),c("A"="red", "B"="blue", "C"="green"))
+vennSets = function(sets, sets_col, ...) {
+  count = length(sets)
+  if(count==2) { vennPair(sets,sets_col, ...)}
+  else if(count==3) { vennTriple(sets,sets_col, ...)}
+  else if(count==4) { vennQuadSets(sets,sets_col, ...)}
+  else if(count==5) { vennQintuple(sets,sets_col, ...)}
+  else { stop("list of sets must contain 2-5 sets; yours contained ", count, " set(S)")}
+}
 
 #
 #' 2 Set Venn
 #'
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed trhough.
-#' @sets List of sets
-#' @sets_col vector mapping set names to colors
+#' @param sets List of sets
+#' @param sets_col vector mapping set names to colors
+#' @param ... passed through to VennDiagram::draw.pairwise.venn
+#'
 #' @examples
 #' x=vennPair(list(A=c(1:5),B=c(3:10)),c("A"="red", "B"="blue"))
 vennPair = function(sets, sets_col, ...) {
@@ -30,8 +53,10 @@ vennPair = function(sets, sets_col, ...) {
 #'
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed trhough.
-#' @sets List of sets
-#' @sets_col vector mapping set names to colors
+#' @param sets List of sets
+#' @param sets_col vector mapping set names to colors
+#' @param ... passed through to VennDiagram::draw.triple.venn
+#'
 #' @examples
 #' x=vennTriple(list(A=c(1:5),B=c(3:10),C=c(8:20,1)),c("A"="red", "B"="blue", "C"="green"))
 #
@@ -60,8 +85,10 @@ vennTriple = function(sets, sets_col,...) {
 #'
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed through.
-#' @sets List of sets
-#' @sets_col vector mapping set names to colors
+#' @param sets List of sets
+#' @param sets_col vector mapping set names to colors
+#' @param ... passed through to VennDiagram::draw.quad.venn
+#'
 #' @examples
 #'
 #' x=vennQuadSets(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100)),c("A"="red", "B"="blue", "C"="green", "D"="purple"))
@@ -101,8 +128,10 @@ vennQuadSets = function(sets, sets_col, ...) {
 #'
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed through.
-#' @sets List of sets
-#' @sets_col vector mapping set names to colors
+#' @param sets List of sets
+#' @param sets_col vector mapping set names to colors
+#' @param ... passed through to VennDiagram::draw.quintuple.venn
+#'
 #' @examples
 #'
 #' x=vennQintuple(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100),E=(50:100)),c("A"="red", "B"="blue", "C"="green", "D"="purple", "E"="beige"))

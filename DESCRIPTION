@@ -1,12 +1,14 @@
-Package: Lists2VennDiagram
-Title: What the Package Does (One Line, Title Case)
+Package: List2VennDiagram
+ImportS: VennDiagram
+Title: Create VennDiagrams from Lists of Sets
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Curtis",
+           family = "Hendrickson",
            role = c("aut", "cre"),
            email = "first.last@example.com")
-Description: What the package does (one paragraph).
+Description: Compute the overlaps between sets and render Venn/Euler diagrams to visualize the overlap.
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1
