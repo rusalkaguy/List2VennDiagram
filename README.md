@@ -1,2 +1,2 @@
-# List2VennDiagram
+# Sets2VennDiagram
 Create Venn Diagrams from Lists, with optional directionality
