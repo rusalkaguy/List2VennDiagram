@@ -4,12 +4,10 @@
 \alias{vennSetQuad}
 \title{4 Set Venn (Euler)}
 \usage{
-vennSetQuad(sets, sets_col, ...)
+vennSetQuad(sets, ...)
 }
 \arguments{
-\item{sets}{List of sets}
-
-\item{sets_col}{vector mapping set names to colors (coming soon)}
+\item{sets}{A List of 4 sets, one for each category of the diagram}
 
 \item{...}{passed through to VennDiagram::draw.quad.venn}
 }

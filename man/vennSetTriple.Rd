@@ -4,12 +4,10 @@
 \alias{vennSetTriple}
 \title{3 Set Venn (Euler)}
 \usage{
-vennSetTriple(sets, sets_col, ...)
+vennSetTriple(sets, ...)
 }
 \arguments{
-\item{sets}{List of sets}
-
-\item{sets_col}{vector mapping set names to colors (coming soon)}
+\item{sets}{A List of 3 sets, one for each category of the diagram}
 
 \item{...}{passed through to VennDiagram::draw.triple.venn}
 }

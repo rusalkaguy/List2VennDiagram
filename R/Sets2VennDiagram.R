@@ -7,22 +7,58 @@
 #' Given a list of 2 to 5 sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed trhough.
 #' @export
-#' @param sets List of sets (2-5)
-#' @param sets_col vector mapping set names to colors (coming soon)
+#' @param sets A List of 2-5 sets. If names are set, they will be used as category names.
+#' @param set.col A vector (length=sets) of colors for category fill and cat.col. If names are set, they will over-ride the sets names
+#' @param set.counts A boolean, if TRUE, the total number items in each category is appended to the title. If a string, then that is used as the separator, instead of a newline.
+#' @param category A vector (length=sets) of display names for the categories, which will override the names from sets and set.col.
+#' @param cat.col A vector (length=sets) giving the colours of the category names
+#' @param fill A vector (length=sets) giving the colours of the circles' areas
 #' @param ... passed through to VennDiagram::draw.*.venn
 #'
 #' @examples
-#' x=vennSets(list(A=c(1:5),B=c(3:10)))
+#' x=vennSets(list(c(1:5),c(3:10)))
 #' y=vennSets(list(A=c(1:5),B=c(3:10),C=c(8:20,1)))
-# x=vennSets(list(A=c(1:5),B=c(3:10)),c("A"="red", "B"="blue"))
-# y=vennSets(list(A=c(1:5),B=c(3:10),C=c(8:20,1)),c("A"="red", "B"="blue", "C"="green"))
-vennSets = function(sets, sets_col=NA, ...) {
-  count = length(sets)
-  if(count==2) { vennSetPair(sets,sets_col, ...)}
-  else if(count==3) { vennSetTriple(sets,sets_col, ...)}
-  else if(count==4) { vennSetQuad(sets,sets_col, ...)}
-  else if(count==5) { vennSetQintuple(sets,sets_col, ...)}
-  else { stop("list of sets must contain 2-5 sets; yours contained ", count, " set(S)")}
+#' x=vennSets(list(A=c(1:5),B=c(3:10)),c("X"="red", "Y"="blue"), cat.counts=T)
+#' y=vennSets(list(1:5,3:10,c(8:20,1)),
+#'          set.col=c("red", "blue", "green"),
+#'          category=paste("Set",1:3), set.counts=": members=")
+#'
+vennSets = function(sets,  set.col=NULL, set.counts=F, category=NULL, cat.col=NULL, fill=NULL, ...) {
+  # valid number of sets
+  n_sets = length(sets)
+  if(n_sets < 2 || n_sets > 5 ) { stop("vennSets: sets list must contain 2-5 sets; yours contained ", n_sets, " set(S)") }
+  # validate lengths of other non-null vectors
+  if(length(set.col) && length(set.col)!=n_sets) { stop("set.col must be same length as sets:", length(set.col), "!=", n_sets) }
+  if(length(category) && length(category)!=n_sets) { stop("category must be same length as sets:", length(category), "!=", n_sets) }
+  if(length(cat.col) && length(cat.col)!=n_sets) { stop("cat.col must be same length as sets:", length(cat.col), "!=", n_sets) }
+  if(length(fill) && length(fill)!=n_sets) { stop("fill must be same length as sets:", length(fill), "!=", n_sets) }
+
+  # cateogry names
+  # 1. category argument, if set
+  # 2. set.col names, if set
+  # 3. sets names, if set
+  if(!length(category) && length(names(set.col))) { category=names(set.col) }
+  if(!length(category) && length(names(sets)))     { category=names(sets)     }
+  if(!length(category))  { category=rep("", n_sets) }  # default from VennDiagram
+
+  # Add set size counts to category labels - how to make this conditional
+  if(set.counts!=F) {
+    sep = "\nn="; if(set.counts!=T) { sep = set.counts }
+    category=paste(category,sep,lapply(sets, length),sep="")
+  }
+
+  # category and fill colors
+  # 1. cat.col & fill args
+  # 2. set.col values
+  if(!length(cat.col) && length(set.col) ) { cat.col=set.col }
+  if(!length(fill)    && length(set.col) ) { fill=   set.col }
+  if(length(cat.col)==0) { cat.col=rep("black", n_sets) }  # default from VennDiagram
+
+  # dispatch to correct underying intersect and draw function
+  if(n_sets==2)      { vennSetPair(sets,category=category, fill=fill, cat.col=cat.col,...)}
+  else if(n_sets==3) { vennSetTriple(sets,category=category, fill=fill, cat.col=cat.col, ...)}
+  else if(n_sets==4) { vennSetQuad(sets,category=category, fill=fill, cat.col=cat.col, ...)}
+  else if(n_sets==5) { vennSetQintuple(sets, category=category, fill=fill, cat.col=cat.col, ...)}
 }
 
 
@@ -31,23 +67,17 @@ vennSets = function(sets, sets_col=NA, ...) {
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed trhough.
 #' @export
-#' @param sets List of sets
-#' @param sets_col vector mapping set names to colors (coming soon)
+#' @param sets A List of 2 sets, one for each category of the diagram
 #' @param ... passed through to VennDiagram::draw.pairwise.venn
 #'
 #' @examples
 #' x=vennSetPair(list(A=c(1:5),B=c(3:10)))
 # x=vennSetPair(list(A=c(1:5),B=c(3:10)),c("A"="red", "B"="blue"))
-vennSetPair = function(sets, sets_col=NA, ...) {
+vennSetPair = function(sets, ...) {
   VennDiagram::draw.pairwise.venn(
     area1=length(sets[[1]])
     , area2=length(sets[[2]])
     , cross.area	= length(intersect(sets[[1]],sets[[2]])) # n12
-    # automatic labels/colors from set names- needs work
-    #, category=names(sets)
-    #, fill=sets_col[names(sets)]
-    #, cat.col = sets_col[names(sets)]
-    #, cat.cex=1.5
     , ...
   )
 }
@@ -58,17 +88,15 @@ vennSetPair = function(sets, sets_col=NA, ...) {
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed trhough.
 #' @export
-#' @param sets List of sets
-#' @param sets_col vector mapping set names to colors (coming soon)
+#' @param sets A List of 3 sets, one for each category of the diagram
 #' @param ... passed through to VennDiagram::draw.triple.venn
 #'
 #' @examples
 #' x=vennSetTriple(list(A=c(1:5),B=c(3:10),C=c(8:20,1)),c("A"="red", "B"="blue", "C"="green"))
 #
-vennSetTriple = function(sets, sets_col,...) {
+vennSetTriple = function(sets,...) {
   overrideTriple=TRUE;
   VennDiagram::draw.triple.venn(
-    #print(c(
     area1=length(sets[[1]])
     , area2=length(sets[[2]])
     , area3=length(sets[[3]])
@@ -76,11 +104,6 @@ vennSetTriple = function(sets, sets_col,...) {
     , n13	= length(intersect(sets[[1]],sets[[3]]))
     , n23	= length(intersect(sets[[2]],sets[[3]]))
     , n123 = length(intersect(intersect(sets[[1]],sets[[2]]),sets[[3]]))
-    # automatic labels/colors from set names- needs work
-    #, category=names(sets)
-    #, fill=sets_col[names(sets)]
-    #, cat.col = sets_col[names(sets)]
-    #, cat.cex=1.5
     ,...
   )
 }
@@ -92,8 +115,7 @@ vennSetTriple = function(sets, sets_col,...) {
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed through.
 #' @export
-#' @param sets List of sets
-#' @param sets_col vector mapping set names to colors (coming soon)
+#' @param sets A List of 4 sets, one for each category of the diagram
 #' @param ... passed through to VennDiagram::draw.quad.venn
 #'
 #' @examples
@@ -101,7 +123,7 @@ vennSetTriple = function(sets, sets_col,...) {
 #' x=vennSetQuad(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100)))
 # x=vennSetQuad(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100)),c("A"="red", "B"="blue", "C"="green", "D"="purple"))
 #
-vennSetQuad = function(sets, sets_col, ...) {
+vennSetQuad = function(sets, ...) {
   VennDiagram::draw.quad.venn(
     #print(c(
     area1=length(sets[[1]])
@@ -120,13 +142,6 @@ vennSetQuad = function(sets, sets_col, ...) {
     , n134	= length(intersect(intersect(sets[[1]],sets[[3]]),sets[[4]]))
     , n234	= length(intersect(intersect(sets[[2]],sets[[3]]),sets[[4]]))
     , n1234	= length(intersect(intersect(sets[[1]],sets[[2]]),intersect(sets[[3]],sets[[4]])))
-    # automatic labels/colors from set names- needs work
-    #, fill=sets_col[names(sets)]
-    #, cat.col = sets_col[names(sets)]
-    #, cat.cex=1.5
-    #, category=names(sets)
-    # Add set size counts to category labels - how to make this conditional
-    #,category=paste(names(sets),"\nn=",lapply(sets, length),sep="")
     , ...
 
   )
@@ -138,8 +153,7 @@ vennSetQuad = function(sets, sets_col, ...) {
 #' Given a list of sets, draw the Venn Diagram depecting their overlap.
 #' All parameters for VennDiagram will be passed through.
 #' @export
-#' @param sets List of sets
-#' @param sets_col vector mapping set names to colors (coming soon)
+#' @param sets A List of 5 sets, one for each category of the diagram
 #' @param ... passed through to VennDiagram::draw.quintuple.venn
 #'
 #' @examples
@@ -147,7 +161,7 @@ vennSetQuad = function(sets, sets_col, ...) {
 #' x=vennSetQintuple(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100),E=(50:100)))
 # x=vennSetQintuple(list(A=c(1:5),B=c(3:10),C=c(8:20,1),D=c(1:2,3:4,15:20,99:100),E=(50:100)),c("A"="red", "B"="blue", "C"="green", "D"="purple", "E"="beige"))
 #
-vennSetQintuple = function(sets, sets_col=NA, ...) {
+vennSetQintuple = function(sets, ...) {
   VennDiagram::draw.quintuple.venn(
     #print(c(
     area1=length(sets[[1]])
@@ -182,13 +196,6 @@ vennSetQintuple = function(sets, sets_col=NA, ...) {
     , n1345	= length(intersect(intersect(sets[[1]],sets[[3]]),intersect(sets[[4]],sets[[5]])))
     , n2345	= length(intersect(intersect(sets[[2]],sets[[3]]),intersect(sets[[4]],sets[[5]])))
     , n12345	= length(intersect(sets[[1]],intersect(intersect(sets[[2]],sets[[3]]),intersect(sets[[4]],sets[[5]]))))
-    # automatic labels/colors from set names- needs work
-    #, fill=sets_col[names(sets)]
-    #, cat.col = sets_col[names(sets)]
-    #, cat.cex=1.0
-    #, category=names(sets) - how to make this conditional
-    # Add set size counts to category labels - how to make this conditional
-    #,category=paste(names(sets),"\nn=",lapply(sets, length),sep="")
     , ...
 
   )

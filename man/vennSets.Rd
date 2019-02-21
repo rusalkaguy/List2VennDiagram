@@ -4,12 +4,21 @@
 \alias{vennSets}
 \title{Venn Diagram from a list of sets}
 \usage{
-vennSets(sets, sets_col = NA, ...)
+vennSets(sets, set.col = NULL, set.counts = F, category = NULL,
+  cat.col = NULL, fill = NULL, ...)
 }
 \arguments{
-\item{sets}{List of sets (2-5)}
+\item{sets}{A List of 2-5 sets. If names are set, they will be used as category names.}
 
-\item{sets_col}{vector mapping set names to colors (coming soon)}
+\item{set.col}{A vector (length=sets) of colors for category fill and cat.col. If names are set, they will over-ride the sets names}
+
+\item{set.counts}{A boolean, if TRUE, the total number items in each category is appended to the title. If a string, then that is used as the separator, instead of a newline.}
+
+\item{category}{A vector (length=sets) of display names for the categories, which will override the names from sets and set.col.}
+
+\item{cat.col}{A vector (length=sets) giving the colours of the category names}
+
+\item{fill}{A vector (length=sets) giving the colours of the circles' areas}
 
 \item{...}{passed through to VennDiagram::draw.*.venn}
 }
@@ -18,6 +27,11 @@ Given a list of 2 to 5 sets, draw the Venn Diagram depecting their overlap.
 All parameters for VennDiagram will be passed trhough.
 }
 \examples{
-x=vennSets(list(A=c(1:5),B=c(3:10)))
+x=vennSets(list(c(1:5),c(3:10)))
 y=vennSets(list(A=c(1:5),B=c(3:10),C=c(8:20,1)))
+x=vennSets(list(A=c(1:5),B=c(3:10)),c("X"="red", "Y"="blue"), cat.counts=T)
+y=vennSets(list(1:5,3:10,c(8:20,1)),
+         set.col=c("red", "blue", "green"),
+         category=paste("Set",1:3), set.counts=": members=")
+
 }

@@ -4,12 +4,10 @@
 \alias{vennSetQintuple}
 \title{5 Set Venn (Euler)}
 \usage{
-vennSetQintuple(sets, sets_col = NA, ...)
+vennSetQintuple(sets, ...)
 }
 \arguments{
-\item{sets}{List of sets}
-
-\item{sets_col}{vector mapping set names to colors (coming soon)}
+\item{sets}{A List of 5 sets, one for each category of the diagram}
 
 \item{...}{passed through to VennDiagram::draw.quintuple.venn}
 }
